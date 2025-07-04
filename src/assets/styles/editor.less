@@ -1,0 +1,188 @@
+.ProseMirror.umo-editor {
+  position: relative;
+  padding: 0 var(--umo-page-margin-right) 0 var(--umo-page-margin-left);
+  box-sizing: border-box;
+  counter-reset: line-number;
+  min-height: calc(var(--umo-page-height) - var(--umo-page-margin-top) - var(--umo-page-margin-bottom));
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    position: relative;
+    &::before {
+      display: none;
+      content: counter(line-number);
+      counter-increment: line-number;
+      position: absolute;
+      left: calc(var(--umo-page-margin-left) * -1);
+      padding-right: 1em;
+      width: var(--umo-page-margin-left);
+      text-align: right;
+      opacity: 0.3;
+      box-sizing: border-box;
+    }
+  }
+
+  p {
+    min-height: 1.5em;
+  }
+
+  .umo-page-break {
+    border-top: 1px dashed #ccc;
+    margin: 1em 0;
+    position: relative;
+    text-align: center;
+    page-break-after: always;
+    &::before {
+      content: attr(data-content);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 0 0.5em;
+      color: #ccc;
+      font-size: 12px;
+    }
+  }
+
+  .umo-page-divider {
+    color: var(--umo-text-color);
+    &[data-type='double'] {
+      border-top-style: double;
+      border-bottom: none;
+    }
+    &[data-type='dotted'] {
+      border-top-style: dotted;
+    }
+    &[data-type='dashed'] {
+      border-top-style: dashed;
+    }
+    &[data-type='dashed-double'] {
+      border-top: 3px double;
+    }
+    &[data-type='signle-bold'] {
+      border-top-width: 3px;
+    }
+    &[data-type='double-bold-top'] {
+      border-top: 3px solid;
+      border-bottom: 1px solid;
+      height: 5px;
+      box-sizing: border-box;
+    }
+    &[data-type='double-bold-bottom'] {
+      border-top: 1px solid;
+      border-bottom: 3px solid;
+      height: 5px;
+      box-sizing: border-box;
+    }
+    &[data-type='wavy'] {
+      border-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e")
+        1;
+      border-style: solid;
+      border-width: 3px;
+    }
+  }
+
+  .umo-text-selection {
+    background-color: var(--umo-primary-color-light);
+  }
+
+  .umo-color-highlighter {
+    background-color: var(--color);
+  }
+
+  .umo-search-result {
+    background-color: #ffefac;
+    border-radius: 2px;
+  }
+
+  .ProseMirror-gapcursor {
+    display: none;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  .ProseMirror-gapcursor:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: -2px;
+    width: 1px;
+    height: 20px;
+    background-color: black;
+    animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+  }
+
+  @keyframes ProseMirror-cursor-blink {
+    to {
+      visibility: hidden;
+    }
+  }
+
+  .ProseMirror-focused .ProseMirror-gapcursor {
+    display: block;
+  }
+
+  .is-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: #adb5bd;
+    pointer-events: none;
+    height: 0;
+  }
+}
+
+.umo-editor-content {
+  &.show-line-number {
+    .ProseMirror.umo-editor {
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        &::before {
+          display: block;
+        }
+      }
+    }
+  }
+  &.show-bookmark {
+    .umo-editor-bookmark {
+      border-bottom: solid 1px var(--umo-primary-color);
+      position: relative;
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border: solid 1px var(--umo-primary-color);
+        border-radius: 2px;
+      }
+      &::before {
+        left: -3px;
+        bottom: -4px;
+        border-right: none;
+        border-top: none;
+      }
+      &::after {
+        right: -3px;
+        bottom: -4px;
+        border-left: none;
+        border-top: none;
+      }
+    }
+  }
+
+  &.format-painter {
+    cursor: url('@/assets/images/format-painter.png'), auto;
+  }
+}
